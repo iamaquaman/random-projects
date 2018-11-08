@@ -274,9 +274,7 @@ detectLsbDist() {
     if [ -z "$LSB_DIST" ]; then
         echo >&2 "$(echo | sed "i$_error_msg")"
         echo >&2 ""
-        echo >&2 "Please visit the following URL for more detailed installation instructions:"
         echo >&2 ""
-        echo >&2 "  https://help.replicated.com/docs/distributing-an-application/installing/"
         exit 1
     fi
 }
@@ -303,56 +301,6 @@ detectInitSystem() {
         echo >&2 "Error: failed to detect init system or unsupported."
         exit 1
     fi
-}
-
-#######################################
-# Finds the init system conf dir. One of /etc/default, /etc/sysconfig
-# Globals:
-#   None
-# Arguments:
-#   None
-# Returns:
-#   CONFDIR
-#######################################
-CONFDIR=
-detectInitSystemConfDir() {
-    # NOTE: there was a bug in support bundle that creates a dir in place of non-existant conf files
-    if [ -d /etc/default/replicated ] || [ -d /etc/default/replicated-operator ]; then
-        if [ -d /etc/default/replicated ]; then
-            rm -rf /etc/default/replicated
-        fi
-        if [ -d /etc/default/replicated-operator ]; then
-            rm -rf /etc/default/replicated-operator
-        fi
-        if [ ! "$(ls -A /etc/default 2>/dev/null)" ]; then
-            # directory is empty, probably exists because of support bundle
-            rm -rf /etc/default
-        fi
-    fi
-    if [ -d /etc/sysconfig/replicated ] || [ -d /etc/sysconfig/replicated-operator ]; then
-        if [ -d /etc/sysconfig/replicated ]; then
-            rm -rf /etc/sysconfig/replicated
-        fi
-        if [ -d /etc/sysconfig/replicated-operator ]; then
-            rm -rf /etc/sysconfig/replicated-operator
-        fi
-        if [ ! "$(ls -A /etc/sysconfig 2>/dev/null)" ]; then
-            # directory is empty, probably exists because of support bundle
-            rm -rf /etc/sysconfig
-        fi
-    fi
-
-    # prefer dir if config is already found
-    if [ -f /etc/default/replicated ] || [ -f /etc/default/replicated-operator ]; then
-        CONFDIR="/etc/default"
-    elif [ -f /etc/sysconfig/replicated ] || [ -f /etc/sysconfig/replicated-operator ]; then
-        CONFDIR="/etc/sysconfig"
-    elif [ "$INIT_SYSTEM" = "systemd" ] && [ -d /etc/sysconfig ]; then
-        CONFDIR="/etc/sysconfig"
-    else
-        CONFDIR="/etc/default"
-    fi
-    mkdir -p "$CONFDIR"
 }
 
 #######################################
@@ -635,18 +583,6 @@ selinux_enforced() {
     fi
 
     return 1
-}
-
-SELINUX_REPLICATED_DOMAIN_LABEL=
-get_selinux_replicated_domain_label() {
-    getDockerVersion
-
-    compareDockerVersions "$DOCKER_VERSION" "1.11.0"
-    if [ "$COMPARE_DOCKER_VERSIONS_RESULT" -eq "-1" ]; then
-        SELINUX_REPLICATED_DOMAIN_LABEL="label:type:$SELINUX_REPLICATED_DOMAIN"
-    else
-        SELINUX_REPLICATED_DOMAIN_LABEL="label=type:$SELINUX_REPLICATED_DOMAIN"
-    fi
 }
 
 #######################################
