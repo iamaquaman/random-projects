@@ -597,9 +597,9 @@ selinux_enforced() {
 warn_if_selinux() {
     if selinux_enabled ; then
         if selinux_enforced ; then
-            printf "${YELLOW}SELinux is enforcing. Running docker with the \"--selinux-enabled\" flag may cause some features to become unavailable.${NC}\n\n"
+            printf "${YELLOW}SELinux is enforcing. The \"--selinux-enabled\" flag may cause issues some features to become unavailable.${NC}\n\n"
         else
-            printf "${YELLOW}SELinux is enabled. Switching to enforcing mode and running docker with the \"--selinux-enabled\" flag may cause some features to become unavailable.${NC}\n\n"
+            printf "${YELLOW}SELinux is enabled. The \"--selinux-enabled\" flag may cause issues or some features to become unavailable.${NC}\n\n"
         fi
     fi
 }
