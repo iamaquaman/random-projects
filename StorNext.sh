@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# This Script sets up the drive configurations for StorNext software from Quantum #
+
+
+
 #######################################
 # Requires that the script be run with the root user.
 #######################################
