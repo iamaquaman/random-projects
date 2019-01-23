@@ -1,4 +1,4 @@
-// This is a sample Data-Dog sample logger
+// This is a sample Data-Dog logger
 
 package main
 
