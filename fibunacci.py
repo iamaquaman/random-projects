@@ -1,4 +1,4 @@
-#Simple Fibunacci Sequence#
+#Simple Fibonacci Sequence#
 
 def fibonacci():
     a, b = 1, 1
@@ -6,4 +6,4 @@ def fibonacci():
         print(b)
         a, b = b, a + b
         
-fibunacci()
+fibonacci()
